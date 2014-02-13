@@ -118,7 +118,11 @@ class Compressor(object):
         name = re.sub(r"^%s[\/\\]?(.*)%s$" % (
             re.escape(base), re.escape(settings.PIPELINE_TEMPLATE_EXT)
         ), r"\1", path)
-        return re.sub(r"[\/\\]", settings.PIPELINE_TEMPLATE_SEPARATOR, name)
+
+        if hasattr(settings, "PIPELINE_TEMPLATE_SEPARATOR"):
+            return re.sub(r"[\/\\]", settings.PIPELINE_TEMPLATE_SEPARATOR, name)
+        else:
+            return re.sub(r"[\/\\]", "_", name)
 
     def concatenate_and_rewrite(self, paths, output_filename, variant=None):
         """Concatenate together files and rewrite urls"""
